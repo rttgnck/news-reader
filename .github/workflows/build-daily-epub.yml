@@ -50,7 +50,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing to commit"
           else
-            git pull --rebase origin main
             git commit -m "Edition $(TZ=America/Chicago date +%m-%d-%Y)"
+            git pull --rebase origin main
             git push
           fi
