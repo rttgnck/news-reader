@@ -117,16 +117,55 @@ def text_length(fragment_html):
     return len(fragment_html)
 
 
-def sanitize(fragment_html):
-  """Whitelist-clean an HTML fragment and return XHTML-safe markup."""
+BLOCK_TAGS = {
+  "p", "div", "blockquote", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5",
+  "h6", "table", "pre", "figure", "figcaption", "hr", "dl", "dt", "dd",
+}
+
+
+def _inside_p(el):
+  anc = el.getparent()
+  while anc is not None:
+    if anc.tag == "p":
+      return True
+    anc = anc.getparent()
+  return False
+
+
+def sanitize(fragment_html, base_url=""):
+  """Whitelist-clean an HTML fragment and return XHTML/EPUB-valid markup."""
   try:
     tree = lxml_html.fromstring(f"<div>{fragment_html}</div>")
+    if base_url:
+      try:
+        tree.make_links_absolute(base_url, resolve_base_href=True)
+      except Exception:
+        pass
     tree = CLEANER.clean_html(tree)
-    for el in tree.iter():
-      if not isinstance(el.tag, str):
+
+    # unwrap tags outside the whitelist, keeping their content
+    for el in list(tree.iter()):
+      if el is tree or not isinstance(el.tag, str):
         continue
-      if el.tag not in ALLOWED_TAGS and el.tag != "div":
-        el.tag = "div"
+      if el.tag not in ALLOWED_TAGS:
+        el.drop_tag()
+
+    # links must be absolute http(s) or e-readers flag/break them
+    for a in list(tree.findall(".//a")):
+      href = a.get("href", "")
+      if not href.startswith(("http://", "https://")):
+        a.drop_tag()
+
+    # block elements are not valid inside <p>: unwrap until stable
+    again = True
+    while again:
+      again = False
+      for el in tree.iter():
+        if isinstance(el.tag, str) and el.tag in BLOCK_TAGS and _inside_p(el):
+          el.drop_tag()
+          again = True
+          break
+
     out = lxml_html.tostring(tree, encoding="unicode", method="xml")
     return re.sub(r"^<div>|</div>$", "", out)
   except Exception as e:
@@ -200,7 +239,7 @@ def collect(config, now_utc):
           "link": entry.get("link", ""),
           "date": dt,
           "source": name,
-          "body": sanitize(body),
+          "body": sanitize(body, entry.get("link") or url),
           "note": source_note,
           "guid": guid,
         })
