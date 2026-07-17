@@ -5,6 +5,13 @@ on:
     # 21:15 UTC = 5:15 AM AWST — edition is ready well before 6 AM
     - cron: "15 21 * * *"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      # editing the feed list or builder triggers a fresh build
+      - feeds.json
+      - build_epub.py
+      - .github/workflows/build-daily-epub.yml
 
 permissions:
   contents: write
@@ -28,9 +35,13 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build edition
-        run: python build_epub.py
+        run: |
+          set -o pipefail
+          mkdir -p state
+          python build_epub.py 2>&1 | tee state/build.log
 
       - name: Commit and push
+        if: always()
         run: |
           git config user.name "news-reader-bot"
           git config user.email "news-reader-bot@users.noreply.github.com"
