@@ -1,10 +1,11 @@
 Feed: AP News
-  ERROR fetching feed: 403 Client Error: Forbidden for url: https://rsshub.app/apnews/topics/apf-topnews
-Feed: Reuters
-  ERROR fetching feed: HTTPSConnectionPool(host='feeds.reuters.com', port=443): Max retries exceeded with url: /reuters/topNews (Caused by NameResolutionError("HTTPSConnection(host='feeds.reuters.com', port=443): Failed to resolve 'feeds.reuters.com' ([Errno -2] Name or service not known)"))
+  0 new article(s), 0 full-text fetched
+Feed: NPR News
+  10 new article(s), 10 full-text fetched
+Feed: BBC World
+  12 new article(s), 12 full-text fetched
 Feed: Ars Technica
   0 new article(s), 0 full-text fetched
 Feed: Hacker News
-  0 new article(s), 0 full-text fetched
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-17-2026.epub (0 articles)
-WARNING: 2 feed(s) failed — see build-report.md
+  3 new article(s), 1 full-text fetched
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-17-2026.epub (25 articles)
