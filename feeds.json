@@ -4,5 +4,20 @@
     "timezone": "America/Chicago",
     "windowHours": 24
   },
-  "categories": []
+  "categories": [
+    {
+      "name": "Top Stories",
+      "feeds": [
+        {"name": "AP News", "url": "https://rsshub.app/apnews/topics/apf-topnews"},
+        {"name": "Reuters", "url": "https://feeds.reuters.com/reuters/topNews"}
+      ]
+    },
+    {
+      "name": "Tech",
+      "feeds": [
+        {"name": "Ars Technica", "url": "https://feeds.arstechnica.com/arstechnica/index"},
+        {"name": "Hacker News", "url": "https://hnrss.org/frontpage"}
+      ]
+    }
+  ]
 }
