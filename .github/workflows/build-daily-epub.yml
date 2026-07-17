@@ -24,6 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
         with:
@@ -48,6 +50,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing to commit"
           else
+            git pull --rebase origin main
             git commit -m "Edition $(TZ=America/Chicago date +%m-%d-%Y)"
             git push
           fi
