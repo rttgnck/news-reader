@@ -3,8 +3,8 @@ Feed: AP News
 Feed: Reuters
   ERROR fetching feed: HTTPSConnectionPool(host='feeds.reuters.com', port=443): Max retries exceeded with url: /reuters/topNews (Caused by NameResolutionError("HTTPSConnection(host='feeds.reuters.com', port=443): Failed to resolve 'feeds.reuters.com' ([Errno -2] Name or service not known)"))
 Feed: Ars Technica
-  20 new article(s), 0 full-text fetched
+  0 new article(s), 0 full-text fetched
 Feed: Hacker News
-  20 new article(s), 18 full-text fetched
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-17-2026.epub (40 articles)
+  0 new article(s), 0 full-text fetched
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-17-2026.epub (0 articles)
 WARNING: 2 feed(s) failed — see build-report.md
