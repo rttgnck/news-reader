@@ -2,13 +2,12 @@ name: Build daily epub
 
 on:
   schedule:
-    # 21:15 UTC = 5:15 AM AWST — edition is ready well before 6 AM
-    - cron: "15 21 * * *"
+    # 11:00 UTC = 6:00 AM CT — edition is ready before morning
+    - cron: "0 11 * * *"
   workflow_dispatch:
   push:
     branches: [main]
     paths:
-      # editing the feed list or builder triggers a fresh build
       - feeds.json
       - build_epub.py
       - .github/workflows/build-daily-epub.yml
@@ -49,6 +48,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "Nothing to commit"
           else
-            git commit -m "Edition $(TZ=Australia/Perth date +%F)"
+            git commit -m "Edition $(TZ=America/Chicago date +%m-%d-%Y)"
             git push
           fi

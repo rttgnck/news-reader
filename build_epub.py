@@ -4,11 +4,11 @@ Daily RSS -> EPUB builder.
 
 Reads feeds.json, collects articles published in the last `windowHours`,
 fetches full article text where the feed only carries an excerpt, and
-builds an EPUB with a categorized contents page.
+builds an EPUB with a categorized contents page and a cover image.
 
 Outputs:
   daily.epub                  - the latest edition (repo root)
-  archive/YYYY-MM-DD.epub     - dated copy (date in the configured timezone)
+  archive/MM-DD-YYYY.epub     - dated copy (date in the configured timezone)
   build-report.md             - per-feed fetch status for the last run
   state/seen.json             - article GUIDs already published (dedupe)
 
@@ -20,6 +20,7 @@ import os
 import re
 import sys
 import html as htmlmod
+import io
 import time
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
@@ -30,11 +31,12 @@ from lxml import html as lxml_html
 from lxml_html_clean import Cleaner
 from readability import Document
 from ebooklib import epub
+from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 USER_AGENT = (
   "Mozilla/5.0 (X11; Linux x86_64) NewsReaderEpub/1.0 "
-  "(personal daily digest; github.com/sam-higton/news-reader)"
+  "(personal daily digest; github.com/rttgnck/news-reader)"
 )
 FETCH_TIMEOUT = 30
 FULLTEXT_MIN_CHARS = 600  # feed content shorter than this is treated as an excerpt
@@ -186,6 +188,52 @@ def fetch_full_text(session, url):
   return doc.summary(html_partial=True)
 
 
+def generate_cover_image(title, date_str, article_count):
+  """Generate a cover image for the epub (600x800, grayscale, e-ink friendly)."""
+  width, height = 600, 800
+  img = Image.new("L", (width, height), 255)
+  draw = ImageDraw.Draw(img)
+
+  # use default font at various sizes (no external font files needed)
+  try:
+    font_title = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", 48)
+    font_date = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf", 36)
+    font_sub = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf", 24)
+  except (OSError, IOError):
+    font_title = ImageFont.load_default()
+    font_date = font_title
+    font_sub = font_title
+
+  # top border line
+  draw.rectangle([40, 120, width - 40, 124], fill=0)
+
+  # title
+  bbox = draw.textbbox((0, 0), title, font=font_title)
+  tw = bbox[2] - bbox[0]
+  draw.text(((width - tw) // 2, 160), title, fill=0, font=font_title)
+
+  # thin separator
+  draw.rectangle([120, 240, width - 120, 242], fill=128)
+
+  # date
+  bbox = draw.textbbox((0, 0), date_str, font=font_date)
+  dw = bbox[2] - bbox[0]
+  draw.text(((width - dw) // 2, 280), date_str, fill=0, font=font_date)
+
+  # article count
+  sub_text = f"{article_count} article{'s' if article_count != 1 else ''}"
+  bbox = draw.textbbox((0, 0), sub_text, font=font_sub)
+  sw = bbox[2] - bbox[0]
+  draw.text(((width - sw) // 2, 350), sub_text, fill=80, font=font_sub)
+
+  # bottom border line
+  draw.rectangle([40, height - 120, width - 40, height - 116], fill=0)
+
+  buf = io.BytesIO()
+  img.save(buf, format="JPEG", quality=85)
+  return buf.getvalue()
+
+
 def collect(config, now_utc):
   window = timedelta(hours=config["settings"].get("windowHours", 24))
   cutoff = now_utc - window
@@ -273,16 +321,26 @@ def collect(config, now_utc):
 
 
 def build_epub(config, categories, now_local):
-  tz_label = "AWST"
+  tz_name = config["settings"].get("timezone", "America/Chicago")
+  tz_abbrevs = {
+    "America/New_York": "ET", "America/Chicago": "CT",
+    "America/Denver": "MT", "America/Los_Angeles": "PT",
+  }
+  tz_label = tz_abbrevs.get(tz_name, tz_name.split("/")[-1])
   title = config["settings"].get("title", "Daily News")
-  edition_date = now_local.strftime("%A %d %B %Y")
+  edition_date = now_local.strftime("%m-%d-%Y")
+  edition_date_long = now_local.strftime("%A, %B %-d, %Y")
   total = sum(len(c["articles"]) for c in categories)
 
   book = epub.EpubBook()
-  book.set_identifier(f"daily-news-{now_local.strftime('%Y%m%d')}")
-  book.set_title(f"{title} — {edition_date}")
+  book.set_identifier(f"daily-news-{now_local.strftime('%m%d%Y')}")
+  book.set_title(f"{title} — {edition_date_long}")
   book.set_language("en")
   book.add_author("news-reader")
+
+  # cover image
+  cover_data = generate_cover_image(title, edition_date_long, total)
+  book.set_cover("cover.jpg", cover_data, create_page=True)
 
   css = epub.EpubItem(uid="style", file_name="style/style.css",
                       media_type="text/css", content=STYLE.encode())
@@ -298,7 +356,7 @@ def build_epub(config, categories, now_local):
   title_page = make_page(
     "titlepage", "title.xhtml", title,
     f'<h1 class="edition-title">{htmlmod.escape(title)}</h1>'
-    f'<p class="edition-sub">{edition_date}</p>'
+    f'<p class="edition-sub">{edition_date_long}</p>'
     f'<p class="edition-sub">{total} articles · compiled '
     f'{now_local.strftime("%-I:%M %p")} {tz_label}</p>',
   )
@@ -311,7 +369,7 @@ def build_epub(config, categories, now_local):
     for art in cat["articles"]:
       idx += 1
       fname = f"art-{idx:03d}.xhtml"
-      when = art["date"].astimezone(now_local.tzinfo).strftime("%-I:%M %p, %a %d %b")
+      when = art["date"].astimezone(now_local.tzinfo).strftime("%-I:%M %p, %a %b %-d")
       note = f'<p class="meta"><em>{htmlmod.escape(art["note"])}</em></p>' if art["note"] else ""
       link = (f' · <a href="{htmlmod.escape(art["link"])}">original</a>') if art["link"] else ""
       body = (
@@ -348,7 +406,7 @@ def build_epub(config, categories, now_local):
   ]
   book.add_item(epub.EpubNcx())
   book.add_item(epub.EpubNav())
-  book.spine = [title_page, contents_page, "nav"] + [
+  book.spine = ["cover", title_page, contents_page, "nav"] + [
     p for _, pages in article_pages for p, _ in pages
   ]
   return book
@@ -358,7 +416,7 @@ def write_report(report_rows, now_local, total):
   lines = [
     "# Build report",
     "",
-    f"Last run: {now_local.strftime('%Y-%m-%d %H:%M %Z')} — {total} article(s) in the edition.",
+    f"Last run: {now_local.strftime('%m-%d-%Y %-I:%M %p %Z')} — {total} article(s) in the edition.",
     "",
     "| Category | Feed | Status | New articles | Notes |",
     "|---|---|---|---|---|",
@@ -373,7 +431,7 @@ def main():
   with open(os.path.join(ROOT, "feeds.json")) as f:
     config = json.load(f)
 
-  tz = ZoneInfo(config["settings"].get("timezone", "Australia/Perth"))
+  tz = ZoneInfo(config["settings"].get("timezone", "America/Chicago"))
   now_utc = datetime.now(timezone.utc)
   now_local = now_utc.astimezone(tz)
 
@@ -383,7 +441,7 @@ def main():
 
   os.makedirs(os.path.join(ROOT, "archive"), exist_ok=True)
   daily_path = os.path.join(ROOT, "daily.epub")
-  archive_path = os.path.join(ROOT, "archive", f"{now_local.strftime('%Y-%m-%d')}.epub")
+  archive_path = os.path.join(ROOT, "archive", f"{now_local.strftime('%m-%d-%Y')}.epub")
   epub.write_epub(daily_path, book)
   epub.write_epub(archive_path, book)
   write_report(report_rows, now_local, total)
