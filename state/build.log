@@ -1,57 +1,11 @@
 Feed: AP News
   0 new article(s), 0 full-text fetched
 Feed: NPR News
-  10 new article(s), 10 full-text fetched
+  9 new article(s), 9 full-text fetched
 Feed: BBC World
-  12 new article(s), 12 full-text fetched
+  19 new article(s), 19 full-text fetched
 Feed: Ars Technica
-  0 new article(s), 0 full-text fetched
+  2 new article(s), 1 full-text fetched
 Feed: Hacker News
-error getting summary: 
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 227, in summary
-    self._html(True)
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 153, in _html
-    self.html = self._parse(self.input)
-                ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 167, in _parse
-    doc = html_cleaner.clean_html(doc)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml_html_clean/clean.py", line 660, in clean_html
-    self(doc)
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml_html_clean/clean.py", line 458, in __call__
-    _kill.popleft().drop_tree()  # popleft to start with innermost elements
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml/html/__init__.py", line 324, in drop_tree
-    parent.text = (parent.text or '') + self.tail
-    ^^^^^^^^^^^
-  File "src/lxml/etree.pyx", line 1168, in lxml.etree._Element.text.__set__
-  File "src/lxml/apihelpers.pxi", line 763, in lxml.etree._setNodeText
-  File "src/lxml/apihelpers.pxi", line 751, in lxml.etree._createTextNode
-  File "src/lxml/apihelpers.pxi", line 1556, in lxml.etree._utf8
-ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters
-error getting summary: 
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 227, in summary
-    self._html(True)
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 153, in _html
-    self.html = self._parse(self.input)
-                ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/readability/readability.py", line 167, in _parse
-    doc = html_cleaner.clean_html(doc)
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml_html_clean/clean.py", line 660, in clean_html
-    self(doc)
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml_html_clean/clean.py", line 458, in __call__
-    _kill.popleft().drop_tree()  # popleft to start with innermost elements
-    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.13/x64/lib/python3.12/site-packages/lxml/html/__init__.py", line 324, in drop_tree
-    parent.text = (parent.text or '') + self.tail
-    ^^^^^^^^^^^
-  File "src/lxml/etree.pyx", line 1168, in lxml.etree._Element.text.__set__
-  File "src/lxml/apihelpers.pxi", line 763, in lxml.etree._setNodeText
-  File "src/lxml/apihelpers.pxi", line 751, in lxml.etree._createTextNode
-  File "src/lxml/apihelpers.pxi", line 1556, in lxml.etree._utf8
-ValueError: All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters
   15 new article(s), 12 full-text fetched
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-19-2026.epub (37 articles)
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/07-20-2026.epub (45 articles)
