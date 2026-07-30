@@ -1,11 +1,11 @@
 # Build report
 
-Last run: 07-29-2026 6:44 AM CDT — 68 article(s) in the edition.
+Last run: 07-30-2026 6:38 AM CDT — 69 article(s) in the edition.
 
 | Category | Feed | Status | New articles | Notes |
 |---|---|---|---|---|
 | Top Stories | AP News | OK | 10 |  |
 | Top Stories | NPR News | OK | 10 |  |
 | Top Stories | BBC World | OK | 21 |  |
-| Tech | Ars Technica | OK | 12 |  |
-| Tech | Hacker News | OK | 15 | fulltext failed for 'National Security Determination Threat Posed by Foreign-Prod': 403 Client Error: Forbidden for url: https://www.fcc.gov/sites/default/files/robots-nsd.pdf |
+| Tech | Ars Technica | OK | 13 |  |
+| Tech | Hacker News | OK | 15 | fulltext failed for 'AI's top startups are barely publishing their research': 403 Client Error: Forbidden for url: https://www.science.org/content/article/ai-s-top-startups-are-b |
