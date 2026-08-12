@@ -3,10 +3,9 @@ Feed: AP News
 Feed: NPR News
   10 new article(s), 10 full-text fetched
 Feed: BBC World
-  18 new article(s), 18 full-text fetched
+  23 new article(s), 23 full-text fetched
 Feed: Ars Technica
-  14 new article(s), 0 full-text fetched
+  13 new article(s), 0 full-text fetched
 Feed: Hacker News
-  ERROR fetching feed: HTTPSConnectionPool(host='hnrss.org', port=443): Read timed out. (read timeout=30)
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/08-11-2026.epub (52 articles)
-WARNING: 1 feed(s) failed — see build-report.md
+  15 new article(s), 13 full-text fetched
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/08-12-2026.epub (71 articles)
