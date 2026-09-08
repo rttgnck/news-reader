@@ -1,11 +1,12 @@
 Feed: AP News
   10 new article(s), 0 full-text fetched
 Feed: NPR News
-  6 new article(s), 6 full-text fetched
+  9 new article(s), 9 full-text fetched
 Feed: BBC World
-  20 new article(s), 20 full-text fetched
+  18 new article(s), 18 full-text fetched
 Feed: Ars Technica
-  1 new article(s), 0 full-text fetched
+  0 new article(s), 0 full-text fetched
 Feed: Hacker News
+    sanitize failed (All strings must be XML compatible: Unicode or ASCII, no NULL bytes or control characters); falling back to escaped text
   15 new article(s), 15 full-text fetched
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/09-07-2026.epub (52 articles)
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/09-08-2026.epub (52 articles)
