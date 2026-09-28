@@ -1,11 +1,12 @@
 Feed: AP News
   0 new article(s), 0 full-text fetched
 Feed: NPR News
-  9 new article(s), 9 full-text fetched
+  10 new article(s), 10 full-text fetched
 Feed: BBC World
-  14 new article(s), 14 full-text fetched
+  15 new article(s), 15 full-text fetched
 Feed: Ars Technica
   0 new article(s), 0 full-text fetched
 Feed: Hacker News
-  13 new article(s), 9 full-text fetched
-Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/09-27-2026.epub (36 articles)
+  ERROR fetching feed: HTTPSConnectionPool(host='hnrss.org', port=443): Max retries exceeded with url: /frontpage?count=15 (Caused by ConnectTimeoutError(<HTTPSConnection(host='hnrss.org', port=443) at 0x7f21fe082060>, 'Connection to hnrss.org timed out. (connect timeout=30)'))
+Wrote /home/runner/work/news-reader/news-reader/daily.epub and /home/runner/work/news-reader/news-reader/archive/09-28-2026.epub (25 articles)
+WARNING: 1 feed(s) failed — see build-report.md
